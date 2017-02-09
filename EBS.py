@@ -1,56 +1,81 @@
 import re
 import time
 
-def init(config):
 
-    spamDict = {}
+def init():
 
-    NumbOfSpams = 0
+    path = ""
 
-    AddFlag = False
+    email = ""
 
-    for line in open(config):
+    outlog = ""
 
-        if "ADD" in line:
+    for lines in file("/opt/EBS/EBS.conf"):
 
-            AddFlag = True
+        line_array = lines.split()
 
-            continue
+        if "path" in line_array[0]:
 
-        elif "END" in line:
+            path = line_array[2]
 
-            AddFlag = False
+        elif "out_log" in line_array[0]:
 
-        elif AddFlag:
+            outlog = line_array[2]
 
-            spamDict[line.strip()] = 0
+        elif "email" in line_array[0]:
 
-        elif "NUMBER" in line:
+            email = line_array[2]
 
-            NumbOfSpams = line.split()[1]
-
-        elif "LOGPATH" in line:
-
-            LogPath = line.split()[1]
-
-    return spamDict, NumbOfSpams, LogPath
+    main(path, email, outlog)
 
 
-def main():
+def DictCompile():
+    
+    new_dict = {}
+
+    for line in file("/opt/EBS/searchterms"):
+
+        line_array = line.split()
+
+        new_dict[line_array[0]] = line_array[1]
+
+    return new_dict
+
+
+def FindIPS(logfile, search_dict):
+
+    IP_REGEX = "\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b"
+    
+    p = re.compile(IP_REGEX)
+    
+    for line in open(logfile):
+
+        m = p.search(line)
+
+        if m is not None:
+
+            if m.group in search_dict:
+
+                search_dict[m.group()] += 1
+
+            elif m.group() not in search_dict:
+
+                search_dict[m.group()] = 1
+
+    return search_dict
+    
+
+def main(path, email, outlog):
 
     startTime = time.time()
 
-    spamDict, Notify, LogPath = init("config.txt")
+    search_dict = DictCompile()
 
-    print(spamDict)
-    print(Notify)
-    print(LogPath)
-
-    for items in spamDict:
+    for items in search_dict:
 
         p = re.compile(items)
 
-        for line in open(LogPath + "*.txt"):
+        for line in open(path):
 
             m = p.search(line)
 
@@ -64,6 +89,8 @@ def main():
 
                     spamDict[m.group()] = 1
 
+    search_dict = FindIPS(path, search_dict)
+
     for each in spamDict:
 
         if spamDict[each] != 0:
@@ -72,17 +99,21 @@ def main():
 
             if spamDict[each] >= Notify:
 
-                Notify_Of_Brute()
+                Notify_Of_Brute(email)
 
                 break
 
-    print("End time: " + str(time.time()-startTime))
+    print("Calculation time: " + str(time.time()-startTime))
 
 
-def Notify_Of_Brute():
+def Notify_Of_Brute(email):
 
-    print("RTP has been notified!")
+    print(email + " has been notified!")
 
 if __name__ == "__main__":
 
-    main()
+    init()
+
+
+
+
