@@ -24,6 +24,7 @@ def main():
     print("copying files...")
     os.system("touch /opt/EBS/ebs-cron.sh")
     os.system("touch /opt/EBS/out.log")
+    os.system("cp ./searchterms /opt/EBS/")
     print("assembling shell script...")
     os.system("echo \"sudo python /opt/EBS/EBS.py\" >> /opt/EBS/ebs-cron.sh")
     print("making cron job...")
