@@ -32,12 +32,8 @@ def main():
 
 def makeCron():
 
-    cron = CronTab(user="EBS", tab="")
-    cron.write(user="EBS")
-    job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
-    job.hour.every(1)
-    job.enable()
-
+    cronjob = "00 * * * * /opt/EBS/ebs-cron.sh"
+    os.system("crontab -l | { cat; echo \"" + cronjob + "\"; } | crontab -u EBS")
 
 if __name__ == "__main__":
 
@@ -54,12 +50,12 @@ if __name__ == "__main__":
 
     try:
 
-        from crontab import CronTab
+        import crontab as ct
 
     except:
 
         pip.main(['install', 'crontab'])
-        from crontab import CronTab
+        import crontab as ct
 
 
 
