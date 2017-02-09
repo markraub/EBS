@@ -24,10 +24,10 @@ def main(path):
     os.system("chown -R EBS:EBS /opt/EBS")
     print("setting file permissions...")
     os.system("cp ./EBS.conf /opt/EBS/")
-    print("adding path to conf...")
-    if path != "":
+    #print("adding path to conf...")
+    #if path != "":
 
-        os.system("echo \"path=" + path + "\" >> ./EBS.conf")
+    #    os.system("echo \"path=" + path + "\" >> ./EBS.conf")
 
     os.system("cp ./EBS.py /opt/EBS/")
     print("cp ./EBS.py /opt/EBS/")
@@ -50,7 +50,6 @@ def makeCron():
 
 if __name__ == "__main__":
 
-    path = input("Enter the path to your spam filter log file [leave blank to configure in EBS.conf]")
 
     
     try:
@@ -71,7 +70,7 @@ if __name__ == "__main__":
         pip.main(['install', 'crontab'])
         from crontab import CronTab
 
-    main(path)
+    main()
 
 
 
