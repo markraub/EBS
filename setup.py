@@ -1,18 +1,8 @@
 
 import os, sys
-try:
-    import pip
-except:
-    os.system("sudo apt-get install python-pip -y")
-    import pip
+    
 
-try: 
-    from crontab import CronTab
-except:
-    pip.main(['install', 'crontab'])
-    from crontab import CronTab
-
-def main(path):
+def main():
 
 
     os.system("mkdir /opt/EBS/")
