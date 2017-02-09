@@ -17,24 +17,31 @@ python3 setup.py --verbose
 
 ```
 
--t or --search-terms  :  add a series of comma delimited search terms surrounded by brackets that you want to add to the hourly regex search. 
-  ex. You want to prevent a specific set of ips that you know is malicious, it would look something like
+-t or --search-terms  :  add a series of comma delimited search terms surrounded by brackets that you want to add to the hourly regex search. Default values [Blocked, SPAM, spam, quarentine, QUARENTINE, BLOCKED, Quarentined, quarentined] (Your entry will not be appended to this by default, it will replace it) 
 ```
   
 python3 setup.py -t [207.233.102.1, 10.8.4.2, 129.74.32.1]
   
 ```
+-a or --append-terms  :  this will make all your search terms be appended to the default list of search terms (only has an effect if -t is defined)
+```
+
+python3 setup.py -a -t [foo, bar, foobar] 
+
+```
   
--l or --set-level  :  set the search intensity level, a number from 1-5. This will adjust how 
+-l or --set-level  :  set the search intensity level, a number from 5-30. This will adjust how many spam emails can come through before a system administrator is notified. Default 15
 ```
 
 python3 setup.py -l 5
 
 ```
   
--p or --log-path  :  set the path to your spam filter log file. make sure this file has been chmoded with read permissions
+-p or --log-path  :  set the path to your spam filter log file, this is required. Make sure this file has been chmoded with read permissions
 ```
 
 python3 setup.py --log-path /var/log/MailScanner/access.log
 
 ```
+
+-e or --set-email  :  
