@@ -96,13 +96,13 @@ def main(path, email, outlog):
 
     search_dict = FindIPS(path, search_dict)
 
-    for each in spamDict:
+    for each in search_dict:
 
-        if spamDict[each] != 0:
+        if search_dict[each] != 0:
 
-            print(str(each) + " was found " + str(spamDict[each]) + " times")
+            print(str(each) + " was found " + str(search_dict[each]) + " times")
 
-            if spamDict[each] >= Notify:
+            if search_dict[each] >= Notify:
 
                 Notify_Of_Brute(email)
 
