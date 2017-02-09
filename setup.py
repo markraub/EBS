@@ -61,28 +61,25 @@ def makeCron():
 
 def AddSearchTerms(index, args):
 
-    term_lst = []
+    temp_lst = []
 
-    for each in range(index, len(args)-1):
+    areTerms = False
 
-        if "[" in args[each]:
+    for each in args[index:]:
 
-            term_lst.append(args[each][1:len(args[each])-2])
+        if areTerms:
 
-            for items in range(each + 1, len(args)-1):
+            temp_lst.append(each)
 
-                if "]" in args[items]:
+        elif each == "[":
 
-                    term_lst.append(args[items][0:len(args[items])-2])
+            areTerms = True
 
-                    return term_lst
+        elif each == "]":
 
-                elif "-" in args[items]:
+            areTerms = False
 
-                    sys.exit("search term error, make sure to enclose your search terms in brackets and use commas")
-
-                term_lst.append(args[items])
-
+            return temp_lst
 
 if __name__ == "__main__":
 
@@ -108,11 +105,11 @@ if __name__ == "__main__":
 
             appendval = True
 
-        elif args[each] == "-t" or "--search-terms":
+        elif args[each] == "-t" or args[each] == "--search-terms":
 
             for stuff in args:
 
-                if stuff == "-a" or "--append-terms":
+                if stuff == "-a" or stuff == "--append-terms":
 
                     appendval = True
 
