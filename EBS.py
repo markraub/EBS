@@ -94,8 +94,9 @@ def FindIPS(logfile, search_dict):
 
                 search_dict[m.group()] = 1
                 new_search_dict += m.group() + " " + str(1) + "\n"
-
-    data_file.write(new_serch_dict)
+    
+    
+    data_file.write(new_search_dict)
     data_file.close()
 
     return search_dict
