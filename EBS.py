@@ -1,7 +1,6 @@
 import re
 import time
 
-
 def init():
 
     path = ""
@@ -10,7 +9,7 @@ def init():
 
     outlog = ""
 
-    for lines in file("/opt/EBS/EBS.conf"):
+    for lines in open("/opt/EBS/EBS.conf"):
 
         line_array = lines.split()
 
@@ -35,7 +34,7 @@ def DictCompile():
     
     new_dict = {}
 
-    for line in file("/opt/EBS/searchterms"):
+    for line in open("/opt/EBS/searchterms"):
 
         line_array = line.split()
         
@@ -51,7 +50,7 @@ def FindIPS(logfile, search_dict):
     
     p = re.compile(IP_REGEX)
     
-    for line in file(logfile):
+    for line in open(logfile):
 
         m = p.search(line)
 
