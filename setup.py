@@ -35,7 +35,7 @@ def main(path):
     os.system("touch /opt/EBS/ebs-cron.sh")
     print("assembling shell script...")
     os.system("echo \"sudo python /opt/EBS/EBS.py\" >> /opt/EBS/ebs-cron.sh")
-    print("making cron job"...)
+    print("making cron job...")
     makeCron()
     print("jobs done!")
 
