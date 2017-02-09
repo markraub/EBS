@@ -9,7 +9,7 @@ except:
 try: 
     from crontab import CronTab
 except:
-    pip.main(['install', crontab])
+    pip.main(['install', 'crontab'])
     from crontab import CronTab
 
 def main(verbosity, terms, level, path):
