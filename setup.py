@@ -32,7 +32,7 @@ def main():
 
 def makeCron():
 
-    cron = CronTab(user="EBS", tab="", log="/opt/EBS/out.log")
+    cron = CronTab(user="EBS", tab="")
     cron.write(user="EBS")
     job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
     job.hour.every(1)
