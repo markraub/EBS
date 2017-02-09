@@ -53,7 +53,7 @@ def DictOut(search_dict):
 
     new_search_dict = ""
 
-    data_file = open("/etc/EBS/searchterms", "ra")
+    data_file = open("/opt/EBS/searchterms", "ra")
 
     for line in file:
 
@@ -78,7 +78,7 @@ def FindIPS(logfile, search_dict):
 
     p = re.compile(IP_REGEX)
 
-    data_file = open("/etc/EBS/searchterms", "ra")
+    data_file = open("/opt/EBS/searchterms", "ra")
     
     for line in open(logfile):
 
