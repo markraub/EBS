@@ -18,6 +18,7 @@ def init():
             if "path" in line_array[0]:
 
                 path = line_array[2]
+                print(line_array)
 
             elif "out_log" in line_array[0]:
 
@@ -68,6 +69,8 @@ def FindIPS(logfile, search_dict):
     
 
 def main(path, email, outlog):
+
+    print(path)
 
     startTime = time.time()
 
