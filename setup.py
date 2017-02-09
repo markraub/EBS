@@ -33,7 +33,7 @@ def main():
 def makeCron():
 
     cronjob = "00 * * * * /opt/EBS/ebs-cron.sh"
-    os.system("crontab -l | { cat; echo \"" + cronjob + "\"; } | crontab -u EBS")
+    os.system("crontab -l | { cat; echo \"" + cronjob + "\"; } | crontab -")
 
 if __name__ == "__main__":
 
