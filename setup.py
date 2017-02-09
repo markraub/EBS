@@ -3,7 +3,8 @@ import os, sys
 try:
     import pip
 except:
-    os.system("sudo apt-get install python-pip")
+    os.system("sudo apt-get install python-pip -y")
+    import pip
 
 try: 
     from crontab import CronTab
