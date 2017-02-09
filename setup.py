@@ -9,7 +9,7 @@ def main():
     print("making directory...")
     os.system("groupadd EBS")
     print("creating user and group...")
-    password = str(hash(os.urandom(256)) + str(hash(os.urandom(32)))
+    password = str(hash(os.urandom(256))) + str(hash(os.urandom(32)))
     os.system("useradd -g EBS -p $(echo " + password + " EBS")
     os.system("chown -R EBS:EBS /opt/EBS")
     print("setting file permissions...")
