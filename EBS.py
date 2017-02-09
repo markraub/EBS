@@ -14,17 +14,19 @@ def init():
 
         line_array = lines.split()
 
-        if "path" in line_array[0]:
+        if len(line_array) > 0:
 
-            path = line_array[2]
+            if "path" in line_array[0]:
 
-        elif "out_log" in line_array[0]:
+                path = line_array[2]
 
-            outlog = line_array[2]
+            elif "out_log" in line_array[0]:
 
-        elif "email" in line_array[0]:
+                outlog = line_array[2]
 
-            email = line_array[2]
+            elif "email" in line_array[0]:
+
+                email = line_array[2]
 
     main(path, email, outlog)
 
