@@ -9,6 +9,8 @@ def init():
 
     outlog = ""
 
+    tolerance = 15
+
     for lines in open("/opt/EBS/EBS.conf"):
 
         line_array = lines.split()
@@ -18,7 +20,6 @@ def init():
             if "path" in line_array[0]:
 
                 path = line_array[2]
-                
 
             elif "out_log" in line_array[0]:
 
@@ -28,7 +29,11 @@ def init():
 
                 email = line_array[2]
 
-    main(path, email, outlog)
+            elif "tolerance" in line_array[0]:
+
+                tolerance = int(line_array[2])
+
+    main(path, email, outlog, tolerance)
 
 
 def DictCompile():
@@ -68,7 +73,7 @@ def FindIPS(logfile, search_dict):
     return search_dict
     
 
-def main(path, email, outlog):
+def main(path, email, outlog, tolerance):
 
     print(path)
 
@@ -102,7 +107,7 @@ def main(path, email, outlog):
 
             print(str(each) + " was found " + str(search_dict[each]) + " times")
 
-            if search_dict[each] >= Notify:
+            if search_dict[each] >= tolerance:
 
                 Notify_Of_Brute(email)
 
