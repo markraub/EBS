@@ -1,4 +1,12 @@
-from crontab import CronTab
+
+import pip
+try: 
+    from crontab import CronTab
+except:
+    pip.main(['install', crontab])
+    from crontab import CronTab
+
+
 import os
 import sys
 
@@ -77,6 +85,9 @@ def AddSearchTerms(index, args):
 
 
 if __name__ == "__main__":
+
+
+
 
     args = sys.argv
 
