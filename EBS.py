@@ -62,7 +62,7 @@ def DictOut(search_dict):
         if line_array[0] in search_dict:
 
             int(line_array[1]) += search_dict[line_array[0]
-            new_search_dict += line_array[0] + " " + line_array[1] + "\n"
+            new_search_dict += line_array[0] + " " + str(ine_array[1]) + "\n"
     
     data_file.write(new_search_dict)
     data_file.close()
