@@ -40,7 +40,7 @@ def DictCompile():
         line_array = line.split()
         
         if len(line_array) > 0:
-            new_dict[line_array[0]] = line_array[1]
+            new_dict[line_array[0]] = int(line_array[1])
 
     return new_dict
 
