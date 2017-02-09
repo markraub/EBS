@@ -38,8 +38,9 @@ def DictCompile():
     for line in file("/opt/EBS/searchterms"):
 
         line_array = line.split()
-
-        new_dict[line_array[0]] = line_array[1]
+        
+        if len(line_array) > 0:
+            new_dict[line_array[0]] = line_array[1]
 
     return new_dict
 
