@@ -17,10 +17,10 @@ python3 setup.py --verbose
 
 ```
 
--t or --search-terms  :  add a series of comma delimited search terms surrounded by brackets that you want to add to the hourly regex search. Default values [Blocked, SPAM, spam, quarentine, QUARENTINE, BLOCKED, Quarentined, quarentined] (Your entry will not be appended to this by default, it will replace it) 
+-t or --search-terms  :  add a series of space delimited search terms surrounded by brackets and a space that you want to add to the hourly regex search. Default values [ Blocked SPAM spam quarentine QUARENTINE BLOCKED Quarentined quarentined ] (Your entry will not be appended to this by default, it will replace it) 
 ```
   
-python3 setup.py -t [207.233.102.1, 10.8.4.2, 129.74.32.1]
+python3 setup.py -t [ 207.233.102.1 10.8.4.2 129.74.32.1 ]
   
 ```
 -a or --append-terms  :  this will make all your search terms be appended to the default list of search terms (only has an effect if -t is defined)
