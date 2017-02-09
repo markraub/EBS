@@ -1,16 +1,15 @@
 
-import pip
+import os, sys
+try:
+    import pip
+except:
+    os.system("sudo apt-get install python-pip")
+
 try: 
     from crontab import CronTab
 except:
     pip.main(['install', crontab])
     from crontab import CronTab
-
-
-import os
-import sys
-
-
 
 def main(verbosity, terms, level, path):
 
