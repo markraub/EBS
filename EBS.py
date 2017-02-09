@@ -66,7 +66,7 @@ def DictOut(search_dict):
             new_search_dict += (line_array[0] + " " + str(line_array[1]) + "\n")
     
     data_file.write(new_search_dict)
-    data_file.close()
+    #data_file.close()
     print("wrote dictionary to file")
 
 
@@ -97,7 +97,7 @@ def FindIPS(logfile, search_dict):
     
     
     data_file.write(new_search_dict)
-    data_file.close()
+    #data_file.close()
 
     return search_dict
     
@@ -123,10 +123,13 @@ def main(path, email, outlog, tolerance):
                 if m.group() in search_dict:
 
                     search_dict[m.group()] += 1
+                    print("found " + m.group()) 
 
                 elif m.group() not in search_dict:
 
                     search_dict[m.group()] = 1
+
+                    print("found " + m.group())
 
     search_dict = FindIPS(path, search_dict)
 
