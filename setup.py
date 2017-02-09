@@ -23,6 +23,7 @@ def main():
     print("cp ./EBS.py /opt/EBS/")
     print("copying files...")
     os.system("touch /opt/EBS/ebs-cron.sh")
+    os.system("touch /opt/EBS/out.log")
     print("assembling shell script...")
     os.system("echo \"sudo python /opt/EBS/EBS.py\" >> /opt/EBS/ebs-cron.sh")
     print("making cron job...")
@@ -31,7 +32,7 @@ def main():
 
 def makeCron():
 
-    cron = CronTab(tab = "")
+    cron = CronTab(user="EBS", tab="", log="/opt/EBS/out.log")
     cron.write(user="EBS")
     job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
     job.hour.every(1)
