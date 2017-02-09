@@ -18,7 +18,7 @@ def init():
             if "path" in line_array[0]:
 
                 path = line_array[2]
-                print(line_array)
+                
 
             elif "out_log" in line_array[0]:
 
@@ -86,13 +86,13 @@ def main(path, email, outlog):
 
             if m is not None:
 
-                if m.group() in spamDict:
+                if m.group() in search_dict:
 
-                    spamDict[m.group()] += 1
+                    search_dict[m.group()] += 1
 
-                elif m.group() not in spamDict:
+                elif m.group() not in search_dict:
 
-                    spamDict[m.group()] = 1
+                    search_dict[m.group()] = 1
 
     search_dict = FindIPS(path, search_dict)
 
