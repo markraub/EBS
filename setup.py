@@ -95,15 +95,11 @@ if __name__ == "__main__":
 
     appendval = False
 
-    for each in range(1, len(args)-1):
+    for each in range(0, len(args)-1):
 
         if args[each] == "-v" or args[each] == "--verbose":
 
             verbosity = True
-
-        elif args[each] == "-a" or args [each] == "--append-terms":
-
-            appendval = True
 
         elif args[each] == "-t" or args[each] == "--search-terms":
 
@@ -129,13 +125,15 @@ if __name__ == "__main__":
 
                 each += len(terms)
 
-        elif args[each] == " -l" or args[each] == "--set-level":
+        elif args[each] == "-l" or args[each] == "--set-level":
 
             level = int(args[each+1])
 
         elif args[each] == "-p" or args[each] == "--log-path":
 
             path = args[each+1]
+            print(args[each])
+            print(args[each+1])
 
         else:
 
