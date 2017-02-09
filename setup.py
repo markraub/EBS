@@ -86,9 +86,6 @@ def AddSearchTerms(index, args):
 
 if __name__ == "__main__":
 
-
-
-
     args = sys.argv
 
     verbosity = False
@@ -100,12 +97,6 @@ if __name__ == "__main__":
     path = ""
 
     appendval = False
-
-    print(args)
-
-    if "-p" not in args or "--log-path" not in args:
-
-        sys.exit("You need to enter a path")
 
     for each in range(1, len(args)-1):
 
@@ -152,6 +143,10 @@ if __name__ == "__main__":
         else:
 
             sys.exit("Error, please check your arguments")
+
+        if path == "":
+
+            sys.exit("You need to enter a path")
 
 
 
