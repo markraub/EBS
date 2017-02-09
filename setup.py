@@ -10,7 +10,7 @@ def main():
     os.system("groupadd EBS")
     print("creating user and group...")
     password = str(hash(os.urandom(256))) + str(hash(os.urandom(32)))
-    os.system("useradd -u 3434 -g EBS -p $(echo " + password + " EBS")
+    os.system("useradd -u 3434 -g EBS -p " + password + " EBS")
     os.system("chown -R EBS:EBS /opt/EBS")
     print("setting file permissions...")
     os.system("cp ./EBS.conf /opt/EBS/")
@@ -31,7 +31,7 @@ def main():
 
 def makeCron():
 
-    cron = CronTab()
+    cron = CronTab("EBS")
     cron.write_to_user(user= "EBS")
     job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
     job.hour.every(1)
