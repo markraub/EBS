@@ -22,7 +22,7 @@ def main(path):
     os.system("groupadd EBS")
     os.system("usermod -aG EBS EBS")
     os.system("chown -R EBS:EBS /opt/EBS")
-    print("setting file permissions"...)
+    print("setting file permissions...")
     os.system("cp ./EBS.conf /opt/EBS/")
     print("adding path to conf...")
     if path != "":
