@@ -51,7 +51,7 @@ def FindIPS(logfile, search_dict):
     
     p = re.compile(IP_REGEX)
     
-    for line in open(logfile):
+    for line in file(logfile):
 
         m = p.search(line)
 
