@@ -7,10 +7,10 @@ def main():
 
     os.system("mkdir /opt/EBS/")
     print("making directory...")
-    os.system("adduser EBS")
-    print("creating user and group...")
     os.system("groupadd EBS")
-    os.system("usermod -aG EBS EBS")
+    print("creating user and group...")
+    password = str(hash(os.urandom(256)) + str(hash(os.urandom(32)))
+    os.system("useradd -g EBS -p $(echo " + password + " EBS")
     os.system("chown -R EBS:EBS /opt/EBS")
     print("setting file permissions...")
     os.system("cp ./EBS.conf /opt/EBS/")
@@ -59,6 +59,9 @@ if __name__ == "__main__":
 
         pip.main(['install', 'crontab'])
         from crontab import CronTab
+
+
+
 
     main()
 
