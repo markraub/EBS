@@ -31,8 +31,8 @@ def main():
 
 def makeCron():
 
-    cron = CronTab("EBS")
-    cron.write_to_user(user= "EBS")
+    cron = CronTab()
+    cron.write_to_user(user="EBS")
     job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
     job.hour.every(1)
     job.enable()
