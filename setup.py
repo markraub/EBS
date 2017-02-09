@@ -12,136 +12,62 @@ except:
     pip.main(['install', 'crontab'])
     from crontab import CronTab
 
-def main(verbosity, terms, level, path):
-
-    if verbosity:
-
-        os.system("mkdir /opt/EBS/")
-        print("mkdir /opt/EBS/")
-        os.system("cp ./EBS.py /opt/EBS/")
-        print("cp ./EBS.py /opt/EBS/")
-        os.system("touch /opt/EBS/ebs-cron.sh")
-        print("touch /opt/EBS/ebs-cron.sh")
-        os.system("touch /opt/EBS/spamDict.txt")
-        print("touch /opt/EBS/spamDict.txt")
-        for each in terms:
-
-            os.system("echo \"" + str(each) + " \n\" >> /opt/EBS/spamDict.txt " )
-            print("Added " + each + " to the spam dictionary")
-
-        os.system("echo \"sudo python3 /opt/EBS/EBS.py " + str(level) + " " + str(path))
-        print("echo \"sudo python3 /opt/EBS/EBS.py " + str(level) + " " + str(path))
-        print("making cron job")
-        makeCron()
+def main(path):
 
 
-    else:
-
-        os.system("mkdir /opt/EBS/")
-        os.system("cp ./EBS.py /opt/EBS/")
-        os.system("touch /opt/EBS/ebs-cron.sh")
-        os.system("touch /opt/EBS/spamDict.txt")
-        for each in terms:
-            os.system("echo \"" + str(each) + " \n\" >> /opt/EBS/spamDict.txt ")
-
-        os.system("echo \"sudo python3 /opt/EBS/EBS.py " + str(level) + " " + str(path))
-
-        makeCron()
-
-
+    os.system("mkdir /opt/EBS/")
+    print("making directory...")
+    os.system("adduser EBS")
+    print("creating user and group...")
+    os.system("groupadd EBS")
+    os.system("usermod -aG EBS EBS")
+    os.system("chown -R EBS:EBS /opt/EBS")
+    print("setting file permissions"...)
+    os.system("cp ./EBS.conf /opt/EBS/")
+    os.system("cp ./EBS.py /opt/EBS/")
+    print("cp ./EBS.py /opt/EBS/")
+    print("copying files...")
+    os.system("touch /opt/EBS/ebs-cron.sh")
+    print("assembling shell script...")
+    os.system("echo \"sudo python /opt/EBS/EBS.py\" >> /opt/EBS/ebs-cron.sh")
+    print("making cron job"...)
+    makeCron()
+    print("jobs done!")
 
 def makeCron():
 
-    cron = CronTab()
+    cron = CronTab(user="EBS")
 
     job = cron.new(command="/opt/EBS/ebs-cron.sh", comment="EBS Spam Ownage Monitor")
     job.hour.every(1)
     job.enable()
 
 
-def AddSearchTerms(index, args):
-
-    temp_lst = []
-
-    areTerms = False
-
-    for each in args[index:]:
-
-        if areTerms:
-
-            temp_lst.append(each)
-
-        elif each == "[":
-
-            areTerms = True
-
-        elif each == "]":
-
-            areTerms = False
-
-            return temp_lst
-
 if __name__ == "__main__":
 
-    args = sys.argv
+    path = input("Enter the path to your spam filter log file [leave blank to configure in EBS.conf]")
 
-    verbosity = False
+    
+    try:
 
-    terms = ["Blocked", "SPAM", "spam", "quarentine", "QUARENTINE", "BLOCKED", "Quarentined", "quarentined"]
+        import pip
 
-    level = 15
+    except:
 
-    path = ""
+        os.system("sudo apt-get install python-pip -y")
+        import pip
 
-    appendval = False
+    try:
 
-    for each in range(0, len(args)-1):
+        from crontab import CronTab
 
-        if args[each] == "-v" or args[each] == "--verbose":
+    except:
 
-            verbosity = True
+        pip.main(['install', 'crontab'])
+        from crontab import CronTab
 
-        elif args[each] == "-t" or args[each] == "--search-terms":
+    main()
 
-            for stuff in args:
-
-                if stuff == "-a" or stuff == "--append-terms":
-
-                    appendval = True
-
-            if appendval:
-
-                templst = AddSearchTerms(each, args)
-
-                for items in templst:
-
-                    terms.append(items)
-
-                each += len(templst)
-
-            else:
-
-                terms = AddSearchTerms(each, args)
-
-                each += len(terms)
-
-        elif args[each] == "-l" or args[each] == "--set-level":
-
-            level = int(args[each+1])
-
-        elif args[each] == "-p" or args[each] == "--log-path":
-
-            path = args[each+1]
-            print(args[each])
-            print(args[each+1])
-
-        else:
-
-            sys.exit("Error, please check your arguments")
-
-        if path == "":
-
-            sys.exit("You need to enter a path")
 
 
 
