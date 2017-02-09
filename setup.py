@@ -101,6 +101,8 @@ if __name__ == "__main__":
 
     appendval = False
 
+    print(args)
+
     if "-p" not in args or "--log-path" not in args:
 
         sys.exit("You need to enter a path")
