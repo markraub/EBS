@@ -132,6 +132,8 @@ def main(path, email, outlog, tolerance):
                     print("found " + m.group())
 
     search_dict = FindIPS(path, search_dict)
+    
+    print(search_dict)
 
     for each in search_dict:
 
