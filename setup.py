@@ -1,10 +1,10 @@
 
 import os, sys
     
-
+#main() will create the directories, users, groups, and move the files that EBS requires to function
 def main():
 
-
+    
     os.system("mkdir /opt/EBS/")
     print("making directory...")
     os.system("groupadd EBS")
@@ -31,6 +31,7 @@ def main():
     makeCron()
     print("jobs done!")
 
+#creates the crontjob for the EBS user
 def makeCron():
 
     cronjob = "00 * * * * /opt/EBS/ebs-cron.sh"
@@ -40,6 +41,8 @@ def makeCron():
         os.system("crontab -e -u EBS")
         os.system("crontab -e -u EBS " + cronjob)
 
+
+#when run from cli, this will install the necessary libs
 if __name__ == "__main__":
 
     try:

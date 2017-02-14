@@ -11,7 +11,7 @@ EBS is to be run as a cron job every hour, and will scan over your spam filter l
 Use setup.py to automatically set up the cron job with the appropriate settings. Setup.py has the following configuration by default:
 
 ```
-path = /var/log/e2guardian/access.log
+path = /opt/EBS/logsample.log
 
 out_log = /opt/EBS/out.log
 
