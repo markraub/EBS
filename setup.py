@@ -35,15 +35,13 @@ def makeCron():
 
     cronjob = "00 * * * * /opt/EBS/ebs-cron.sh"
     try:
-        os.system("crontab -l | { cat; echo \"" + cronjob + "\"; } | crontab -")
+        os.system("crontab -e -u EBS " + cronjob)
     except:
-        os.system("crontab -e")
-        os.system("crontab -l | { cat; echo \"" + cronjob + "\"; } | crontab -")
+        os.system("crontab -e -u EBS")
+        os.system("crontab -e -u EBS " + cronjob)
 
 if __name__ == "__main__":
 
-
-    
     try:
 
         import pip
