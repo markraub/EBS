@@ -14,11 +14,6 @@ def main():
     os.system("chown -R EBS:EBS /opt/EBS")
     print("setting file permissions...")
     os.system("cp ./EBS.conf /opt/EBS/")
-    #print("adding path to conf...")
-    #if path != "":
-
-    #    os.system("echo \"path=" + path + "\" >> ./EBS.conf")
-
     os.system("cp ./EBS.py /opt/EBS/")
     print("cp ./EBS.py /opt/EBS/")
     print("copying files...")
@@ -34,13 +29,11 @@ def main():
 #creates the crontjob for the EBS user
 def makeCron():
 
-    cronjob = "00 * * * * /opt/EBS/ebs-cron.sh"
-    try:
-        os.system("crontab -e -u EBS " + cronjob)
-    except:
-        os.system("crontab -e -u EBS")
-        os.system("crontab -e -u EBS " + cronjob)
-
+    ebs_cron = CrontTab(user="EBS")
+    job = ebs_cron.new(command="python /opt/EBS/EBS.py")
+    job.minute.every(15)
+    job.enable()	
+	
 
 #when run from cli, this will install the necessary libs
 if __name__ == "__main__":
@@ -56,12 +49,12 @@ if __name__ == "__main__":
 
     try:
 
-        import crontab as ct
+        from crontab import CronTab
 
     except:
 
-        pip.main(['install', 'crontab'])
-        import crontab as ct
+        pip.main(['install', 'python-crontab'])
+        from crontab import CronTab
 
 
 
