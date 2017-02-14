@@ -1,6 +1,8 @@
 import re
 import time
 
+
+#parsing the configuration file for the necessary configuration
 def init():
 
     path = ""
@@ -35,7 +37,7 @@ def init():
 
     main(path, email, outlog, tolerance)
 
-
+#compiles the searchterms file into a dictionary
 def DictCompile():
     
     new_dict = {}
@@ -49,6 +51,8 @@ def DictCompile():
 
     return new_dict
 
+
+#outputs the results of the search into a new searchterms file
 def DictOut(search_dict):
 
     new_search_dict = ""
@@ -69,7 +73,7 @@ def DictOut(search_dict):
     #data_file.close()
     print("wrote dictionary to file")
 
-
+#searches through the logs of your spam filter for IPv4 addresses
 def FindIPS(logfile, search_dict):
 
     IP_REGEX = "\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b"
@@ -101,7 +105,7 @@ def FindIPS(logfile, search_dict):
 
     return search_dict
     
-
+#does the initial search for all the searchterms in your dictionary
 def main(path, email, outlog, tolerance):
 
     print(path)
@@ -149,7 +153,7 @@ def main(path, email, outlog, tolerance):
 
     print("Calculation time: " + str(time.time()-startTime))
 
-
+#sends an email to the given administrator email
 def Notify_Of_Brute(email):
 
     print(email + " has been notified!")
