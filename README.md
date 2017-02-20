@@ -30,7 +30,7 @@ Still in beta, none of the following features are guarenteed to be working in th
 
 ## Planned Features
 * IPv6 searching
-* Move from a text document to a XML document or something of a similar nature
+* Move from a text document to a SQLite database file
 * Hostname searching
 * Flask front end to display the result database
 * Email the given email once the tolerance level is hit
