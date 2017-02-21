@@ -37,8 +37,10 @@ def makeCron():
 
 #when run from cli, this will install the necessary libs
 if __name__ == "__main__":
-
-    os.system("sudo apt-get install python-pip")
+    
+    os.system("sudo add-apt-repositort universe -y")
+    os.system("sudo apt-get update -y")
+    os.system("sudo apt-get install python-pip -y")
 
     try:
 
