@@ -1,5 +1,53 @@
 import re
 import time
+import sqlite3
+
+
+class Result:
+
+    c = sqlite3.connect("/opt/EBS/EBS_Results.db")
+    conn = c.cursor()
+
+    def __init__(self, term):
+
+        self.term = term
+        self.stamp = time.time()
+    
+
+    
+    def writeToDB(self):
+        
+    
+        
+        #print("writing to db: ")
+
+        Result.conn.execute("INSERT INTO results values (?, ?)", (self.term, str(self.stamp)))
+
+        Result.c.commit()
+
+    def closeDB(self):
+
+        #print("closing db")
+
+        Result.c.commit()
+
+        Result.c.close()
+
+    def printDB(self):
+
+        #print("printing db")
+
+        for row in Result.conn.execute("SELECT * FROM results ORDER BY stamp"):
+        #    print("rest")
+            print(row)
+
+    def getCount(self):
+
+        #print("showing count")
+
+        for row in Result.conn.execute("select term, count(term) from results group by term"):
+        #    print("cest")
+            print(row)
 
 
 #parsing the configuration file for the necessary configuration
@@ -40,49 +88,25 @@ def init():
 #compiles the searchterms file into a dictionary
 def DictCompile():
     
-    new_dict = {}
+    new_dict = []
 
     for line in open("/opt/EBS/searchterms"):
 
-        line_array = line.split()
+        line = line.strip()
         
-        if len(line_array) > 0:
-            new_dict[line_array[0]] = int(line_array[1])
+        new_dict.append(line)
 
     return new_dict
 
 
-#outputs the results of the search into a new searchterms file
-def DictOut(search_dict):
-
-    new_search_dict = ""
-
-    data_file = open("/opt/EBS/searchterms", "r+w")
-
-    for line in file:
-
-        line_array = line.split()
-
-        if line_array[0] in search_dict:
-
-            result = int(line_array[1]) + search_dict[line_array[0]]
-        
-            new_search_dict += (line_array[0] + " " + str(line_array[1]) + "\n")
-    
-    data_file.write(new_search_dict)
-    #data_file.close()
-    print("wrote dictionary to file")
-
 #searches through the logs of your spam filter for IPv4 addresses
-def FindIPS(logfile, search_dict):
+def FindIPv4(logfile):
 
-    IP_REGEX = "\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b"
+    IP_REGEX = "^([0-9]{1,3}\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$"
     
-    new_search_dict = ""
+    new_search_dict = []
 
     p = re.compile(IP_REGEX)
-
-    data_file = open("/opt/EBS/searchterms", "r+w")
     
     for line in open(logfile):
 
@@ -90,67 +114,110 @@ def FindIPS(logfile, search_dict):
 
         if m is not None:
 
-            if m.group in search_dict:
+            new_search_dict.append(m.group())    
 
-                search_dict[m.group()] += 1
+    print("ipv4 results: " + str(new_search_dict))
 
-            elif m.group() not in search_dict:
+    return new_search_dict
 
-                search_dict[m.group()] = 1
-                new_search_dict += m.group() + " " + str(1) + "\n"
-    
-    
-    data_file.write(new_search_dict)
-    #data_file.close()
+def FindPhrase(logfile, search_dict):
 
-    return search_dict
-    
-#does the initial search for all the searchterms in your dictionary
-def main(path, email, outlog, tolerance):
-
-    print(path)
-
-    startTime = time.time()
-
-    search_dict = DictCompile()
+    new_search_dict = []
 
     for items in search_dict:
 
         p = re.compile(items)
 
-        for line in open(path):
+        for line in open(logfile):
 
             m = p.search(line)
 
             if m is not None:
 
-                if m.group() in search_dict:
+                new_search_dict.append(m.group())
 
-                    search_dict[m.group()] += 1
-                    print("found " + m.group()) 
+    print("phrase results: " + str(new_search_dict))
 
-                elif m.group() not in search_dict:
-
-                    search_dict[m.group()] = 1
-
-                    print("found " + m.group())
-
-    search_dict = FindIPS(path, search_dict)
     
-    print(search_dict)
+    return new_search_dict
 
-    for each in search_dict:
+def FindHostname(logfile):
 
-        if search_dict[each] != 0:
+    REGEX = "^(([a-zA-Z]|[a-zA-Z][a-zA-Z\-]*[a-zA-Z])\.)*([A-Za-z]|[A-Za-z][A-Za-z\-]*[A-Za-z])$"
 
-            print(str(each) + " was found " + str(search_dict[each]) + " times")
+    new_search_dict = []
 
-            if search_dict[each] >= tolerance:
+    p = re.compile(REGEX)
 
-                Notify_Of_Brute(email)
+    for line in open(logfile):
 
-                break
+        m = p.search(line)
 
+        if m is not None:
+
+            new_search_dict.append(m.group())
+
+    print("hostname results: " + str(new_search_dict))
+
+
+    return new_search_dict
+
+def FindIPv6(logfile):
+
+    REGEX = "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
+
+    new_search_dict = []
+
+    p = re.compile(REGEX)
+
+    for line in open(logfile):
+
+        m = p.search(line)
+
+        if m is not None:
+
+            new_search_dict.append(m.group())
+
+    print("ipv6 results: " + str(new_search_dict))
+
+    return new_search_dict
+
+#does the initial search for all the searchterms in your dictionary
+def main(path, email, outlog, tolerance):
+
+    #print(path)
+
+    startTime = time.time()
+
+    master = Result(None)
+
+    for each in FindPhrase(path, DictCompile()):
+
+        new_entry = Result(each)
+        new_entry.writeToDB()
+
+    for each in FindIPv4(path):
+
+        new_entry = Result(each)
+        new_entry.writeToDB()
+
+    for each in FindHostname(path):
+
+        new_entry = Result(each)
+        new_entry.writeToDB()
+
+    for each in FindIPv6(path):
+
+        new_entry = Result(each)
+        new_entry.writeToDB()
+    
+    master.printDB()
+
+    master.getCount()
+
+    master.closeDB
+
+    
     print("Calculation time: " + str(time.time()-startTime))
 
 #sends an email to the given administrator email
