@@ -38,6 +38,8 @@ def makeCron():
 #when run from cli, this will install the necessary libs
 if __name__ == "__main__":
 
+    os.system("sudo apt-get install python-pip")
+
     try:
 
         import pip
