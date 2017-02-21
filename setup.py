@@ -29,7 +29,7 @@ def main():
 #creates the crontjob for the EBS user
 def makeCron():
 
-    ebs_cron = CrontTab(user="root")
+    ebs_cron = CronTab(user="root")
     job = ebs_cron.new(command="python /opt/EBS/EBS.py")
     job.minute.every(15)
     job.enable()	
