@@ -23,17 +23,14 @@ tolerance = 15
 
 ## Current Features
 Still in beta, none of the following features are guarenteed to be working in this version
-* IPv4 addresses are dynamically added to the result db
-* Search terms are parsed and found in the set spam log
-* EBS user is created and a crontab file is created for that user
-* /opt/EBS folder is created
+* IPv4 address searching
+* IPv6 address searching
+* Hostname searching
+* Phrase matching
+* Matches are entered into SQLite database file
 
 ## Planned Features
-* IPv6 searching
-* Move from a text document to a SQLite database file
-* Hostname searching
-* Flask front end to display the result database
-* Email the given email once the tolerance level is hit
-* Move away from CronJob method, run EBS as a daemon for more frequent, and faster database updates
-* Dynamically create iptables rule once above certain tolerance level
-
+* Flask back end to serve results to a web admin page
+* Email notifications
+* Dynamically create iptables rule once above certain tolerance level OR drop 80% of packets from flagged IP addresses for 48 hours
+ 
