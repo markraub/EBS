@@ -15,13 +15,11 @@ class Result:
     
 
     
-    def writeToDB(self):
-        
-    
+    def writeToDB(self, table):    
         
         #print("writing to db: ")
 
-        Result.conn.execute("INSERT INTO results values (?, ?)", (self.term, str(self.stamp)))
+        Result.conn.execute("INSERT INTO " + table + " values (?, ?)", (self.term, str(self.stamp)))
 
         Result.c.commit()
 
@@ -37,9 +35,15 @@ class Result:
 
         #print("printing db")
 
-        for row in Result.conn.execute("SELECT * FROM results ORDER BY stamp"):
-        #    print("rest")
-            print(row)
+        tables = ["ipv4", "ipv6", "hostname", "phrase"]
+        
+        for each in tables:
+
+            print(each)
+
+            for row in Result.conn.execute("SELECT * FROM " + each + " ORDER BY stamp"):
+
+                print(row)
 
     def getCount(self):
 
@@ -132,7 +136,7 @@ def FindPhrase(logfile, search_dict):
 
             m = p.search(line)
 
-            if m is not None:
+            if m is not None and m.group() is not "":
 
                 new_search_dict.append(m.group())
 
@@ -143,7 +147,9 @@ def FindPhrase(logfile, search_dict):
 
 def FindHostname(logfile):
 
-    REGEX = "^(([a-zA-Z]|[a-zA-Z][a-zA-Z\-]*[a-zA-Z])\.)*([A-Za-z]|[A-Za-z][A-Za-z\-]*[A-Za-z])$"
+    #REGEX = "^(([a-zA-Z]|[a-zA-Z][a-zA-Z\-]*[a-zA-Z])\.)*([A-Za-z]|[A-Za-z][A-Za-z\-]*[A-Za-z])$"
+
+    REGEX = "^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$"
 
     new_search_dict = []
 
@@ -153,7 +159,7 @@ def FindHostname(logfile):
 
         m = p.search(line)
 
-        if m is not None:
+        if m is not None and "." in m.group():
 
             new_search_dict.append(m.group())
 
@@ -194,26 +200,26 @@ def main(path, email, outlog, tolerance):
     for each in FindPhrase(path, DictCompile()):
 
         new_entry = Result(each)
-        new_entry.writeToDB()
+        new_entry.writeToDB("phrase")
 
     for each in FindIPv4(path):
 
         new_entry = Result(each)
-        new_entry.writeToDB()
+        new_entry.writeToDB("ipv4")
 
     for each in FindHostname(path):
 
         new_entry = Result(each)
-        new_entry.writeToDB()
+        new_entry.writeToDB("hostname")
 
     for each in FindIPv6(path):
 
         new_entry = Result(each)
-        new_entry.writeToDB()
+        new_entry.writeToDB("ipv6")
     
-    master.printDB()
+    #master.printDB()
 
-    master.getCount()
+    #master.getCount()
 
     master.closeDB
 
