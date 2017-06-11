@@ -13,8 +13,6 @@ class Result:
         self.term = term
         self.stamp = time.time()
     
-
-    
     def writeToDB(self, table):    
         
         #print("writing to db: ")
@@ -41,18 +39,22 @@ class Result:
 
             print(each)
 
-            for row in Result.conn.execute("SELECT * FROM " + each + " ORDER BY stamp"):
+            for row in Result.conn.execute("SELECT * FROM " + each  + " ORDER BY stamp"):
 
                 print(row)
 
-    def getCount(self):
+    def getTable(self, table):
+
+        return Result.conn.execute("SELECT * FROM " + table + " ORDER BY stamp")
+        
+
+    def getCount(self, table):
 
         #print("showing count")
 
-        for row in Result.conn.execute("select term, count(term) from results group by term"):
+        for row in Result.conn.execute("select term, count(term) from " + table  + " group by term"):
         #    print("cest")
             print(row)
-
 
 #parsing the configuration file for the necessary configuration
 def init():
@@ -102,7 +104,6 @@ def DictCompile():
 
     return new_dict
 
-
 #searches through the logs of your spam filter for IPv4 addresses
 def FindIPv4(logfile):
 
@@ -142,7 +143,6 @@ def FindPhrase(logfile, search_dict):
 
     print("phrase results: " + str(new_search_dict))
 
-    
     return new_search_dict
 
 def FindHostname(logfile):
@@ -164,7 +164,6 @@ def FindHostname(logfile):
             new_search_dict.append(m.group())
 
     print("hostname results: " + str(new_search_dict))
-
 
     return new_search_dict
 
@@ -191,50 +190,82 @@ def FindIPv6(logfile):
 #does the initial search for all the searchterms in your dictionary
 def main(path, email, outlog, tolerance):
 
-    #print(path)
-
     startTime = time.time()
 
     master = Result(None)
 
-    for each in FindPhrase(path, DictCompile()):
+    phrase_match = FindPhrase(path, DictCompile())
+
+    IPv4_match = FindIPv4(path)
+
+    hostname_match = FindHostname(path)
+
+    IPv6_match = FindIPv6(path)
+
+    for each in phrase_match:
 
         new_entry = Result(each)
-        new_entry.writeToDB("phrase")
+        new_entry.writeToDB("phrase") 
 
-    for each in FindIPv4(path):
+    for each in IPv4_match:
 
         new_entry = Result(each)
         new_entry.writeToDB("ipv4")
 
-    for each in FindHostname(path):
+    for each in hostname_match:
 
         new_entry = Result(each)
         new_entry.writeToDB("hostname")
 
-    for each in FindIPv6(path):
+    for each in IPv6_match:
 
         new_entry = Result(each)
         new_entry.writeToDB("ipv6")
+
+    result_list = [phrase_match, IPv4_match, hostname_match, IPv6_match]
+
+    for each in result_list:
+
+        for items in each:
+
+            for tables in ["phrase", "ipv4", "hostname", "ipv6"]:
+                
+                DBFind = getDBTotal(master, items, tables)
+
+                if DBFind > tolerance:
+
+                    Notify_Of_Brute("fuckshit", (str(items) + " caused it, found " + str(DBFind) + " times in the last 15 minutes"))
     
     #master.printDB()
 
     #master.getCount()
 
     master.closeDB
-
     
     print("Calculation time: " + str(time.time()-startTime))
 
-#sends an email to the given administrator email
-def Notify_Of_Brute(email):
+#parse the total number of hits in the DB of a certain value and return it 
+def getDBTotal(self, term, table):
 
-    print(email + " has been notified!")
+    last_fifteen = time.time() - 900
+
+    matches = self.getTable(table)
+
+    final_list = []
+
+    for each in matches:
+
+        if float(str(each[1])) >= last_fifteen:
+
+            final_list.append(each)
+
+    return len(final_list)
+
+#sends an email to the given administrator email
+def Notify_Of_Brute(email, reason):
+
+    print(email + " has been notified! " + reason + ".")
 
 if __name__ == "__main__":
 
     init()
-
-
-
-
